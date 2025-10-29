@@ -120,6 +120,10 @@ public:
 		return *m_val;
 	}
 
+	bool has_value() const {
+		return m_exists;
+	}
+
 	/**
 	 * @brief Returns the contains value or the given value
 	 */
