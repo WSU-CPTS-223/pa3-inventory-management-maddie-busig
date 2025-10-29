@@ -59,5 +59,27 @@ void unordered_map<KEY_T, VAL_T, HASH_F>::reserve(size_t count) {
 	}
 }
 
+template <typename KEY_T, typename VAL_T, typename HASH_F>
+std::pair<typename unordered_map<KEY_T, VAL_T, HASH_F>::iterator, bool> unordered_map<KEY_T, VAL_T, HASH_F>::insert(pair_type pair) {
+	reserve(m_size + 1);
+
+	const KEY_T& key = pair.first;
+
+	tagged_entry* pos;
+	size_t attempt = 0;
+
+	do {
+		pos = m_table[hash(key, attempt++)];
+	} while (pos->full() && pos->key() != key);
+
+	// If the key was a duplicate, do not replace
+	if (pos->key() == key) {
+		return { pos, false };
+	} else {
+		pos->set_entry(pair);
+		return { pos, true };
+	}
+}
+
 } // namespace dsa
 
