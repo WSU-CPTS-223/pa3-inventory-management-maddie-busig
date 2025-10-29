@@ -69,7 +69,7 @@ std::pair<typename unordered_map<KEY_T, VAL_T, HASH_F>::iterator, bool> unordere
 	size_t attempt = 0;
 
 	do {
-		pos = m_table[hash(key, attempt++)];
+		pos = &m_table[hash(key, attempt++)];
 	} while (pos->full() && pos->key() != key);
 
 	// If the key was a duplicate, do not replace
