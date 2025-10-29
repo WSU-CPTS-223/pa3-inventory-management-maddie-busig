@@ -136,6 +136,7 @@ public:
 			m_val->~T();
 		}
 
+		m_val = nullptr;
 		m_exists = false;
 	}
 
