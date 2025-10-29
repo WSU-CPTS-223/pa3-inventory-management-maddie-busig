@@ -179,9 +179,9 @@ private:
 	 */
 	void resize();
 
-	std::unique_ptr<tagged_entry[]> m_table;
 	size_type m_size;
 	size_type m_buckets;
+	std::unique_ptr<tagged_entry[]> m_table;
 
 	/**
 	 * Stores an entry in the hash table
