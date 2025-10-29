@@ -140,6 +140,17 @@ public:
 		m_exists = false;
 	}
 
+	/**
+	 * @brief Construct value in place
+	 */
+	template <typename... ARGS_T>
+	void emplace(ARGS_T... args) {
+		reset();
+
+		m_val = new (m_buf) T(args...);
+		m_exists = true;
+	}
+
 private:
 	bool m_exists;
 
