@@ -128,9 +128,9 @@ public:
 	const_iterator begin() const;
 	const_iterator cbegin() const;
 
-	iterator end() { return m_buckets; }
-	const_iterator end() const { return m_buckets; }
-	const_iterator cend() const { return m_buckets; }
+	iterator end() { return m_table.get() + m_buckets; }
+	const_iterator end() const { return m_table.get() + m_buckets; }
+	const_iterator cend() const { return m_table.get() + m_buckets; }
 
 	/**
 	 * @brief Calculate the current load factor
