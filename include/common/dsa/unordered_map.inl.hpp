@@ -32,7 +32,7 @@ size_t unordered_map<KEY_T, VAL_T, HASH_F>::collision_offset(size_t attempt) con
 
 template <typename KEY_T, typename VAL_T, typename HASH_F>
 size_t unordered_map<KEY_T, VAL_T, HASH_F>::hash(const KEY_T& key, size_t attempt) const {
-	return (HASH_F(key) + collision_offset(attempt)) % m_buckets;
+	return (HASH_F{}(key) + collision_offset(attempt)) % m_buckets;
 }
 
 template <typename KEY_T, typename VAL_T, typename HASH_F>
