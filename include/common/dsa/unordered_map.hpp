@@ -13,7 +13,7 @@ class unordered_map {
 private:
 	class tagged_entry;
 
-	template <typename IT_PAIR_T>
+	template <typename IT_ENTRY_T, typename IT_PAIR_T>
 	class iterator_base;
 
 public:
@@ -21,8 +21,8 @@ public:
 	using value_type = pair_type; // std::unordered_map has pair named value_type
 	using size_type = size_t;
 
-	using iterator = iterator_base<pair_type>;
-	using const_iterator = iterator_base<const pair_type>;
+	using iterator = iterator_base<tagged_entry, pair_type>;
+	using const_iterator = iterator_base<const tagged_entry, const pair_type>;
 
 	unordered_map() :
 		m_size(0),
@@ -218,6 +218,41 @@ private:
 		bool m_empty;
 		bool m_sentinel;
 		pair_type m_entry; // c++17 adds std::optional, would be useful here
+	};
+
+	template <typename IT_ENTRY_T, typename IT_PAIR_T>
+	class iterator_base {
+	public:
+		iterator_base(IT_ENTRY_T* entry) : m_entry(entry) {}
+
+		template <typename OTH_IT_ENTRY_T, typename OTH_IT_PAIR_T>
+		iterator_base(iterator_base<OTH_IT_ENTRY_T, OTH_IT_PAIR_T> other) : m_entry(other.m_entry) {}
+
+		using iterator_type = iterator_base<IT_ENTRY_T, IT_PAIR_T>;
+
+		iterator_type& operator++() {
+			while (*this != map->end() && !m_entry->full()){
+				++m_entry;
+			}
+
+			return *this;
+		}
+
+		iterator_type operator++(int) const {
+			iterator_type tmp = *this;
+			++(*this);
+			return tmp;
+		}
+
+		bool operator==(const iterator_type& other) const { return m_entry == other.m_entry; }
+		bool operator!=(const iterator_type& other) const { return m_entry != other.m_entry; }
+
+		IT_PAIR_T& operator*() const { return m_entry->m_pair; }
+		IT_PAIR_T* operator->() const { return &m_entry->m_pair; }
+
+	private:
+		const unordered_map<KEY_T, VAL_T>* map; // Map this iterator belongs to
+		IT_ENTRY_T* m_entry;
 	};
 };
 
