@@ -24,25 +24,16 @@ TEST_ENTRYPOINT int test_unordered_map_insert_find(int argc, char** argv) {
 	unordered_map<int, std::string> map;
 
 	for (const pair_type& pair : pairs) {
-		try {
-			map.insert(pair);
-		} catch (std::exception& e) {
-			std::cerr << "Caught exception while inserting " << e.what() << std::endl;
-			return -1;
-		}
+		map.insert(pair);
 	}
 
 	for (const pair_type& pair : pairs) {
-		try {
-			std::string found = map[pair.first];
-			if (found != pair.second) {
-				std::cerr << "Incorrect value found " << found << ", expected "
-				          << pair.second << " for key " << pair.first << std::endl;
-				return -2;
-			}
-		} catch (std::exception& e) {
-			std::cerr << "Caught exception while searching map " << e.what() << std::endl;
-			return -3;
+		std::string found = map[pair.first];
+
+		if (found != pair.second) {
+			std::cerr << "Incorrect value found " << found << ", expected "
+			<< pair.second << " for key " << pair.first << std::endl;
+			return -2;
 		}
 	}
 
