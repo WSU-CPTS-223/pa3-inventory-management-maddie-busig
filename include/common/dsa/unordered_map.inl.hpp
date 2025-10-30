@@ -73,7 +73,7 @@ std::pair<typename unordered_map<KEY_T, VAL_T, HASH_F>::iterator, bool> unordere
 	} while (pos->full() && pos->key() != key);
 
 	// If the key was a duplicate, do not replace
-	if (pos->key() == key) {
+	if (pos->full() && pos->key() == key) {
 		return { pos, false };
 	} else {
 		pos->set_entry(pair);
