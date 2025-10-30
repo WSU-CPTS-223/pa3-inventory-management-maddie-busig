@@ -162,24 +162,6 @@ private:
 	 */
 	size_t hash(const KEY_T& key, size_t attempt) const;
 
-	/**
-	 * @brief Determine if the load factor threshold would be crossed after one more insertion
-	 *
-	 * If this function returns true, the next insertion will result in a resize
-	 * and a rehash.
-	 */
-	bool threshold_reached() const {
-		double exp_load = static_cast<double>(m_size + 1) / m_buckets;
-		return exp_load >= 0.5;
-	}
-
-	/**
-	 * @brief Resizes the hashmap if the threshold has been reached
-	 *
-	 * New table size is the lowest prime number >= 2 * max_size
-	 */
-	void resize();
-
 	size_type m_size;
 	size_type m_buckets;
 	std::unique_ptr<tagged_entry[]> m_table;
