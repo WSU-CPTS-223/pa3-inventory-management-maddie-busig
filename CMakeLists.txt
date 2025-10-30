@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
 enable_testing()
 
-project(pa2 CXX C)
+project(pa3 CXX C)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(PROJ_LIBRARY ${PROJECT_NAME}common)
