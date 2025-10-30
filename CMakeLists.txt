@@ -29,7 +29,7 @@ endif()
 if (CMAKE_BUILD_TYPE STREQUAL Release OR CMAKE_BUILD_TYPE STREQUAL RelWithDebInfo)
 	add_compile_options("-O2")
 else()
-	add_compile_options("-O1")
+	add_compile_options("-O0")
 endif()
 
 add_executable(${PROJ_PROGRAM} "${sources_program}")
