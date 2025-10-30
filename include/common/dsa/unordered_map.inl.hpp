@@ -82,6 +82,60 @@ std::pair<typename unordered_map<KEY_T, VAL_T, HASH_F>::iterator, bool> unordere
 }
 
 template <typename KEY_T, typename VAL_T, typename HASH_F>
+typename unordered_map<KEY_T, VAL_T, HASH_F>::iterator unordered_map<KEY_T, VAL_T, HASH_F>::find(const KEY_T& key) {
+	size_t attempt = 0;
+	tagged_entry* entry = nullptr;
+
+	do {
+		size_t idx = hash(key, attempt);
+		entry = &m_table[idx];
+		++attempt;
+		// Keep looking until we find an empty bucket, or the key matches cur attempt
+	} while (!entry->empty() && entry->key() != key);
+
+	bool match = !entry->empty() && entry->key() == key;
+	return match ? entry : end();
+}
+
+template <typename KEY_T, typename VAL_T, typename HASH_F>
+typename unordered_map<KEY_T, VAL_T, HASH_F>::const_iterator unordered_map<KEY_T, VAL_T, HASH_F>::find(const KEY_T& key) const {
+	size_t attempt = 0;
+	tagged_entry* entry = nullptr;
+
+	do {
+		size_t idx = hash(key, attempt);
+		entry = &m_table[idx];
+		++attempt;
+		// Keep looking until we find an empty bucket, or the key matches cur attempt
+	} while (!entry->empty() && entry->key() != key);
+
+	bool match = !entry->empty() && entry->key() == key;
+	return match ? entry : end();
+}
+
+template <typename KEY_T, typename VAL_T, typename HASH_F>
+VAL_T& unordered_map<KEY_T, VAL_T, HASH_F>::operator[](const KEY_T& key) {
+	iterator it = find(key);
+
+	if (it == end()) {
+		throw std::invalid_argument("Key not found in map");
+	}
+
+	return it->second;
+}
+
+template <typename KEY_T, typename VAL_T, typename HASH_F>
+const VAL_T& unordered_map<KEY_T, VAL_T, HASH_F>::operator[](const KEY_T& key) const {
+	iterator it = find(key);
+
+	if (it == end()) {
+		throw std::invalid_argument("Key not found in map");
+	}
+
+	return it->second;
+}
+
+template <typename KEY_T, typename VAL_T, typename HASH_F>
 typename unordered_map<KEY_T, VAL_T, HASH_F>::iterator unordered_map<KEY_T, VAL_T, HASH_F>::begin() {
 	tagged_entry* entry = m_table.get();
 	tagged_entry* end = m_table.get() + m_buckets;
