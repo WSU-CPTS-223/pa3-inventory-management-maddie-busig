@@ -5,6 +5,7 @@
 #include <tuple>
 
 #include "utility.hpp"
+#include "optional.hpp"
 
 namespace dsa {
 
@@ -192,32 +193,32 @@ private:
 	 */
 	class tagged_entry {
 	public:
-		tagged_entry() : m_empty(true), m_sentinel(false) {}
-		tagged_entry(pair_type entry) : m_empty(false), m_sentinel(false), m_entry(entry) {}
+		tagged_entry() : m_empty(true) {}
+		tagged_entry(pair_type entry) : m_empty(false), m_pair(entry) {}
 
 		bool empty() const { return m_empty; }
-		bool sentinel() const { return m_sentinel; }
-		bool full() const { return !m_empty && !m_sentinel; }
+		bool sentinel() const { return !m_empty && !m_pair.has_value(); }
+		bool full() const { return m_pair.has_value(); }
 
-		pair_type entry() { return m_entry; }
+		pair_type entry() { return m_pair; }
 
-		KEY_T key() const { return m_entry.first; }
-		VAL_T& value() { return m_entry.second; }
-		const VAL_T& value() const { return m_entry.second; }
+		KEY_T key() const { return m_pair.value().first; }
+		VAL_T& value() { return m_pair.value().second; }
+		const VAL_T& value() const { return m_pair.value().second; }
 
 		void set_entry(pair_type entry) {
 			m_empty = false;
-			m_sentinel = false;
-			m_entry = entry;
+
+			m_pair.reset();
+			m_pair.emplace(entry);
 		}
 		void remove_entry() {
-			m_sentinel = true;
+			m_pair.reset();
 		}
 
 	private:
 		bool m_empty;
-		bool m_sentinel;
-		pair_type m_entry; // c++17 adds std::optional, would be useful here
+		optional<pair_type> m_pair;
 	};
 
 	template <typename IT_ENTRY_T, typename IT_PAIR_T>
@@ -247,8 +248,8 @@ private:
 		bool operator==(const iterator_type& other) const { return m_entry == other.m_entry; }
 		bool operator!=(const iterator_type& other) const { return m_entry != other.m_entry; }
 
-		IT_PAIR_T& operator*() const { return m_entry->m_pair; }
-		IT_PAIR_T* operator->() const { return &m_entry->m_pair; }
+		IT_PAIR_T& operator*() const { return m_entry->m_pair.value(); }
+		IT_PAIR_T* operator->() const { return &m_entry->m_pair.value(); }
 
 	private:
 		const unordered_map<KEY_T, VAL_T>* map; // Map this iterator belongs to
