@@ -217,6 +217,9 @@ private:
 		}
 
 	private:
+		template <typename IT_ENTRY_T, typename IT_PAIR_T>
+		friend class iterator_base;
+
 		bool m_empty;
 		optional<pair_type> m_pair;
 	};
@@ -224,6 +227,9 @@ private:
 	template <typename IT_ENTRY_T, typename IT_PAIR_T>
 	class iterator_base {
 	public:
+		template <typename OTH_IT_ENTRY_T, typename OTH_IT_PAIR_T>
+		friend class iterator_base;
+
 		iterator_base(IT_ENTRY_T* entry) : m_entry(entry) {}
 
 		template <typename OTH_IT_ENTRY_T, typename OTH_IT_PAIR_T>
@@ -245,8 +251,11 @@ private:
 			return tmp;
 		}
 
-		bool operator==(const iterator_type& other) const { return m_entry == other.m_entry; }
-		bool operator!=(const iterator_type& other) const { return m_entry != other.m_entry; }
+		template <typename OTH_IT_ENTRY_T, typename OTH_IT_PAIR_T>
+		bool operator==(const iterator_base<OTH_IT_ENTRY_T, OTH_IT_PAIR_T>& other) const { return m_entry == other.m_entry; }
+
+		template <typename OTH_IT_ENTRY_T, typename OTH_IT_PAIR_T>
+		bool operator!=(const iterator_base<OTH_IT_ENTRY_T, OTH_IT_PAIR_T>& other) const { return m_entry != other.m_entry; }
 
 		IT_PAIR_T& operator*() const { return m_entry->m_pair.value(); }
 		IT_PAIR_T* operator->() const { return &m_entry->m_pair.value(); }
