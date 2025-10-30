@@ -81,5 +81,32 @@ std::pair<typename unordered_map<KEY_T, VAL_T, HASH_F>::iterator, bool> unordere
 	}
 }
 
+template <typename KEY_T, typename VAL_T, typename HASH_F>
+typename unordered_map<KEY_T, VAL_T, HASH_F>::iterator unordered_map<KEY_T, VAL_T, HASH_F>::begin() {
+	tagged_entry* entry = m_table.get();
+	tagged_entry* end = m_table.get() + m_buckets;
+
+	while (entry != end && !entry->full()) {
+		++entry;
+	}
+
+	return entry;
+}
+template <typename KEY_T, typename VAL_T, typename HASH_F>
+typename unordered_map<KEY_T, VAL_T, HASH_F>::const_iterator unordered_map<KEY_T, VAL_T, HASH_F>::begin() const {
+	tagged_entry* entry = m_table.get();
+	tagged_entry* end = m_table.get() + m_buckets;
+
+	while (entry != end && !entry->full()) {
+		++entry;
+	}
+
+	return entry;
+}
+template <typename KEY_T, typename VAL_T, typename HASH_F>
+typename unordered_map<KEY_T, VAL_T, HASH_F>::const_iterator unordered_map<KEY_T, VAL_T, HASH_F>::cbegin() const {
+	return begin();
+}
+
 } // namespace dsa
 
